@@ -22,7 +22,7 @@ public class JSONWriter {
 
         try (FileWriter filewriter = new FileWriter(jsonObject.getOutputPath(), false)) {
             filewriter.write(writer.toString());
-            //System.out.println(writer);
+            System.out.println(writer);
             filewriter.flush();
         } catch (IOException ex) {
             ex.printStackTrace();
