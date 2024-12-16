@@ -8,7 +8,7 @@ public class FileWorker {
 
     public LinkedHashMap<String, Report> readDataFile(String dataFile) {
         LinkedHashMap<String, Report> map = new LinkedHashMap<>();
-        try (Scanner scanner = new Scanner(new File(dataFile));) {
+        try (Scanner scanner = new Scanner(new File(dataFile))) {
             String line;
             while (scanner.hasNextLine()) {
                 line = scanner.nextLine();
@@ -30,7 +30,7 @@ public class FileWorker {
 
     public LinkedList<String> readInputFile(String inputFile) {
         LinkedList<String> requestList;
-        try (Scanner scanner = new Scanner(new File(inputFile));) {
+        try (Scanner scanner = new Scanner(new File(inputFile))) {
             String line;
             requestList = new LinkedList<>();
             while (scanner.hasNextLine()) {
