@@ -3,8 +3,6 @@ package com.crosska;
 import org.apache.commons.cli.*;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
@@ -34,7 +32,6 @@ public class Main {
 
     private static void startSearchProcess(String dataPath, String inputPath, String outputPath, long startTime) {
         FileWorker fileWorker = new FileWorker(); // Обьект работы с файлами
-        DataAnalyser dataAnalyser = new DataAnalyser(); // Обьект для анализа данных
         List<ResultElem> resArray = new ArrayList<>(); // Список обьектов для JSON файла
 
         LinkedList<String> requestList = fileWorker.readInputFile(inputPath); // Считываем данные о запросах в список
@@ -43,43 +40,51 @@ public class Main {
 
         LinkedHashMap<String, Report> dataMap = fileWorker.readDataFile(dataPath); // Считываем данные об отчетах в мапу
 
-
         for (String currentRequest : requestList) { // Цикл по запросам в списке запросов
             long searchStartTime = System.currentTimeMillis();
 
-            String[] parsedRequest = dataAnalyser.parseRequest(currentRequest);
+            String[] parsedRequest = DataAnalyser.parseString(currentRequest); // Парсим текущий запрос по словам с обрезанием окончаний
+            //System.out.println("Текущий запрос:" + Arrays.toString(parsedRequest));
 
-            for (Map.Entry<String, Report> entry : dataMap.entrySet()) {
+            for (Map.Entry<String, Report> entry : dataMap.entrySet()) { // Обнуляем все точности отчетов
                 entry.getValue().resetPrecision();
             }
 
             for (String seekWord : parsedRequest) { // Цикл по словам в разобранном запросе
-                System.out.println("Ищем \"" + seekWord + "\" в отчетах");
+                //System.out.println("Ищем \"" + seekWord + "\" в отчетах");
 
-                for (Map.Entry<String, Report> entry : dataMap.entrySet()) {
-                    Pattern pattern = Pattern.compile("\\b\\w*" + seekWord + "\\w*\\b");
-                    Matcher matcher = pattern.matcher(dataAnalyser.parseReport(entry.getValue().getReportName()));
+                for (Map.Entry<String, Report> entry : dataMap.entrySet()) { // Цикл по данным отчетов
 
-                    if (matcher.find()) {
-                        System.out.println(entry.getValue().getReportName() + " содержит " + seekWord);
-                        entry.getValue().increasePrecision();
+                    for (int i = 0; i < entry.getValue().getParsedReportName().length; i++) { // Цикл по каждому слову в названии отчета
+                        if (seekWord.equalsIgnoreCase(entry.getValue().getParsedReportName()[i])) { // Слово совпадает (опуская регистр)
+                            //System.out.println(seekWord + " = " + entry.getValue().getParsedReportName()[i]);
+                            entry.getValue().increasePrecision(); // Повышаем точность отчета
+                        }
                     }
 
                 }
 
-                System.out.println("\n");
             }
 
             ArrayList<String> GUIDList = new ArrayList<>();
             int max = 0;
-            for (Map.Entry<String, Report> entry : dataMap.entrySet()) {
-                if (entry.getValue().getQueryPrecision() > max) {
+            int reportCount = 0;
+            for (Map.Entry<String, Report> entry : dataMap.entrySet()) { // Цикл по данным отчетам (Максимум 3 подходящих отчета)
+                if (entry.getValue().getQueryPrecision() > max) { // Если точность выше нашей прошлой максимальной
                     GUIDList.clear();
                     GUIDList.add(entry.getKey());
-                } else if (entry.getValue().getQueryPrecision() == max && entry.getValue().getQueryPrecision() != 0) {
+                    reportCount = 1;
+                    max = entry.getValue().getQueryPrecision();
+                    //System.out.println("Точность отчета - " + entry.getValue().getOriginalReportName() + " = " + entry.getValue().getQueryPrecision());
+                    //System.out.println("Самый точный: " + Arrays.toString(entry.getValue().getParsedReportName()));
+                } else if (entry.getValue().getQueryPrecision() == max && entry.getValue().getQueryPrecision() != 0 && reportCount < 3) { // Если точность такая же
                     GUIDList.add(entry.getKey());
+                    //System.out.println("Такой же точный: " + Arrays.toString(entry.getValue().getParsedReportName()));
+                    reportCount++;
+                    //System.out.println("Точность отчета - " + entry.getValue().getOriginalReportName() + " = " + entry.getValue().getQueryPrecision());
                 }
             }
+            //System.out.println();
 
             long searchTime = System.currentTimeMillis() - searchStartTime;
 

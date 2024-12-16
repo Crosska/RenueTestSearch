@@ -8,7 +8,6 @@ public class FileWorker {
 
     public LinkedHashMap<String, Report> readDataFile(String dataFile) {
         LinkedHashMap<String, Report> map = new LinkedHashMap<>();
-        DataAnalyser dataAnalyser = new DataAnalyser();
         try (Scanner scanner = new Scanner(new File(dataFile));) {
             String line;
             while (scanner.hasNextLine()) {
@@ -17,7 +16,7 @@ public class FileWorker {
                     String[] s = line.split("\\|"); // Делим столбцы, используя '|' как разделитель
                     for (int i = 0; i < s.length; i++) {
                         s[i] = s[i].strip(); // Убираем пробелы
-                        Report report = new Report(dataAnalyser.parseReport(s[2]));
+                        Report report = new Report(s[2]);
                         map.put(s[0], report);
                     }
                 }

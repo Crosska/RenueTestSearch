@@ -2,19 +2,11 @@ package com.crosska;
 
 public class DataAnalyser {
 
-    public String[] parseRequest(String request) {
+    public static String[] parseString(String request) {
         try {
-            request = request.strip().replaceAll("[,.()!?]", "");
+            request = request.strip().replaceAll("[,.()!?;\\-*@#$%^&=\\[\\]{}_<>/`~]", "");
+            request = request.replaceAll("([а-яА-ЯёЁa-zA-Z0-9]{2,})([а-яА-ЯёЁa-zA-Z0-9]{2})", "$1");
             return request.split(" ");
-        } catch (NullPointerException e) {
-            throw new NullPointerException();
-        }
-    }
-
-    public  String parseReport(String request) {
-        try {
-            request = request.strip().replaceAll("[,.()!?]", "");
-            return request;
         } catch (NullPointerException e) {
             throw new NullPointerException();
         }

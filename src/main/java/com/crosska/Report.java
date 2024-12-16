@@ -2,12 +2,14 @@ package com.crosska;
 
 public class Report {
 
-    private final String reportName;
+    private final String[] parsedReportName;
+    private final String originalReportName;
     private Integer queryPrecision;
 
     public Report(String reportName) {
         this.queryPrecision = 0;
-        this.reportName = reportName;
+        this.parsedReportName = DataAnalyser.parseString(reportName);
+        this.originalReportName = reportName;
     }
 
     public void increasePrecision() {
@@ -18,8 +20,12 @@ public class Report {
         queryPrecision = 0;
     }
 
-    public String getReportName() {
-        return reportName;
+    public String getOriginalReportName() {
+        return originalReportName;
+    }
+
+    public String[] getParsedReportName() {
+        return parsedReportName;
     }
 
     public int getQueryPrecision() {
