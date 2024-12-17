@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.crosska.Main" />
+    <module name="RenueTestSearch" />
+    <option name="PROGRAM_PARAMETERS" value="--data D:\files\test.csv --input-file D:\files\input1.txt --output-file D:\files\result1.json" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

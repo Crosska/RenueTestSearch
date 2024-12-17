@@ -41,6 +41,7 @@ public class Main {
         LinkedHashMap<String, Report> dataMap = fileWorker.readDataFile(dataPath); // Считываем данные об отчетах в мапу
 
         for (String currentRequest : requestList) { // Цикл по запросам в списке запросов
+
             long searchStartTime = System.currentTimeMillis();
 
             String[] parsedRequest = DataAnalyser.parseString(currentRequest); // Парсим текущий запрос по словам с обрезанием окончаний
@@ -55,9 +56,12 @@ public class Main {
 
                 for (Map.Entry<String, Report> entry : dataMap.entrySet()) { // Цикл по данным отчетов
 
+                    ArrayList<String> alreadyCheckedWords = new ArrayList<>();
+
                     for (int i = 0; i < entry.getValue().getParsedReportName().length; i++) { // Цикл по каждому слову в названии отчета
-                        if (seekWord.equalsIgnoreCase(entry.getValue().getParsedReportName()[i])) { // Слово совпадает (опуская регистр)
+                        if (seekWord.equalsIgnoreCase(entry.getValue().getParsedReportName()[i]) && !alreadyCheckedWords.contains(seekWord)) { // Слово совпадает (опуская регистр)
                             //System.out.println(seekWord + " = " + entry.getValue().getParsedReportName()[i]);
+                            alreadyCheckedWords.add(seekWord);
                             entry.getValue().increasePrecision(); // Повышаем точность отчета
                         }
                     }
