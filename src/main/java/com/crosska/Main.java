@@ -68,16 +68,16 @@ public class Main {
 
             ArrayList<String> GUIDList = new ArrayList<>();
             int max = 0;
-            //int reportCount = 0;
+            int reportCount = 0;
             for (Map.Entry<String, Report> entry : dataMap.entrySet()) { // Цикл по данным отчетам (Максимум 3 подходящих отчета)
                 if (entry.getValue().getQueryPrecision() > max) { // Если точность выше нашей прошлой максимальной
                     GUIDList.clear();
                     GUIDList.add(entry.getKey());
-                    //reportCount = 1;
+                    reportCount = 1;
                     max = entry.getValue().getQueryPrecision();
-                } else if (entry.getValue().getQueryPrecision() == max && entry.getValue().getQueryPrecision() != 0) { // Если точность такая же
+                } else if (entry.getValue().getQueryPrecision() == max && entry.getValue().getQueryPrecision() != 0 && reportCount < 3) { // Если точность такая же
                     GUIDList.add(entry.getKey());
-                    //reportCount++;
+                    reportCount++;
                 }
             }
 

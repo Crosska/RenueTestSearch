@@ -17,7 +17,7 @@ public class FileWorker {
                     for (int i = 0; i < s.length; i++) {
                         s[i] = s[i].strip(); // Убираем пробелы
                         Report report = new Report(s[2]);
-                        map.put(s[0], report);
+                        map.put(s[0].toLowerCase(), report);
                     }
                 }
             }
@@ -36,7 +36,7 @@ public class FileWorker {
             while (scanner.hasNextLine()) {
                 line = scanner.nextLine();
                 if (!line.isEmpty()) { // Пропускаем если строка пуста
-                    requestList.add(line);
+                    requestList.add(line.toLowerCase());
                 }
             }
         } catch (FileNotFoundException e) {
